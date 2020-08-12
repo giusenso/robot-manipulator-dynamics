@@ -1,4 +1,4 @@
-# robot-manipulators-dynamics
+# robot-manipulator-dynamics
 This repository contains Matlab scripts used to compute Euler-Lagrange dynamic models of a large number of robot manipulators.
 
 Euler-Lagrange Dynamics:  **`M(q)*ddq + c(q,dq) + g(q) = u`**
