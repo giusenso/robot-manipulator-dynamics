@@ -8,6 +8,7 @@
 %           christoff:  christoffel matrices (Nx1 cell containing NxN matrices)
 %           S:          factorization of c such that dM-2S is skew-symmetric(NxN)
 %           X:          factorization of c such that dM-2S is not skew-symmetric (NxN)
+
 function [c, christoff, S, X] = centrifugal_coriolis(M, q, dq)
     N = length(q);
 	c = sym('c',[N,1]); assume(c,'real');
@@ -16,7 +17,7 @@ function [c, christoff, S, X] = centrifugal_coriolis(M, q, dq)
     for i = 1:N
         m_ = simplify( jacobian(M(:,i),q) );
         christoff{i} = simplify( 0.5*(m_ + m_.' - diff(M,q(i))) );
-        c(i) = dq.'*christoff{i}*dq;   
+        c(i) = dq.'*christoff{i}*dq;  
         for j = 1:N
             S(i,j) = christoff{i}(:,j).' * dq;
         end

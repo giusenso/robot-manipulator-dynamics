@@ -16,9 +16,8 @@
 %           rcm0:       cell (1xN) containing vectors (3x1) going from frame 0 to
 %                       the i-th CoM
 
-function [vcm,w,rcm0] = moving_frame_algo(q, dq, r, l, d, sigma)
+function [vcm,w,rcm0] = moving_frame(q, dq, r, l, d, sigma)
     N = length(r);
-    
     r0 = cell(1,N);
     rcm = cell(1,N);
     rcm0 = cell(1,N);
@@ -31,8 +30,12 @@ function [vcm,w,rcm0] = moving_frame_algo(q, dq, r, l, d, sigma)
     prev_v  = [0;0;0];
     
     for i = 1:N
-        r0{i}   = sum([r{1:i}],2);
-        rcm{i}  = subs(r{i}, l(i), d(i));
+        r0{i} = sum([r{1:i}],2);
+        if sigma(i)==0
+            rcm{i} = subs(r{i}, l(i), d(i));
+        else
+            rcm{i} = subs(r{i}, q(i), q(i)-d(i));
+        end
         rcm0{i} = prev_r0 + rcm{i};
         w{i}    = prev_w + (1-sigma(i))*dq(i)*[0;0;1];
         v{i}    = prev_v + sigma(i)*dq(i)*(r{i}/q(i)) + cross(w{i},r{i});
@@ -42,40 +45,10 @@ function [vcm,w,rcm0] = moving_frame_algo(q, dq, r, l, d, sigma)
         prev_w  = w{i};
         prev_v  = v{i};
     end
-    print_output(vcm, w, rcm0)
-end
-
-
-function print_output(vcm, w, rcm0)
-    for i = 1:length(w)
-
-        fprintf("rcm0%d:\n", i);
-        disp(rcm0{i})
-        
-        fprintf("w%d:\n", i);
-        disp(w{i})
-        
-        fprintf("vcm%d:\n", i);
-        disp(vcm{i})
-        
-        fprintf("________________________________________________\n\n");
-    end
 end
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-%
 
 
